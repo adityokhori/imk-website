@@ -1,12 +1,12 @@
 import React from "react";
 
-const Button = ({buttonName, warna}) => {
+const Button = (props) => {
   return (
     <button
-      className={`h-10 px-5 font-semibold rounded-md ${warna} text-white`}
-      type="submit"
+      className="bg-indigo-600 text-white font-[Poppins] py-2 px-6 rounded md:ml-8 hover:bg-indigo-400 
+    duration-500"
     >
-      {buttonName}
+      {props.children}
     </button>
   );
 };
