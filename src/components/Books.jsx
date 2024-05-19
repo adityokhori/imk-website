@@ -57,8 +57,8 @@ const Books = () => {
             <p className="text-gray-600 line-clamp-1">
               {book.authors.map((author) => author.name).join(", ")}
             </p>
-            <br></br>
             <div className="mt-auto">
+              <br></br>
               <Button>Read</Button>
             </div>
           </div>

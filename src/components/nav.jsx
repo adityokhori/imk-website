@@ -44,10 +44,10 @@ const Nav = () => {
           ))}
 
           <li className="md:my-0 my-7">
-            <Button>Login</Button>
+            <Button stats="md:ml-8">Login</Button>
           </li>
           <li className="md:my-0 my-7">
-            <Button>Sign Up</Button>
+            <Button stats="md:ml-8">Sign Up</Button>
           </li>
         </ul>
       </div>
