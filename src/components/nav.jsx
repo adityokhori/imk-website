@@ -4,7 +4,7 @@ import Button from "./button";
 const Nav = () => {
   let Links = [
     { name: "Home", link: "/" },
-    { name: "About", link: "/" },
+    { name: "About", link: "/hello" },
     { name: "Contact", link: "/" },
   ];
   let [open, setOpen] = useState(false);
