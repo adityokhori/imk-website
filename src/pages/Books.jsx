@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Button from "./button";
+import Button from "../components/button";
 import { PiDownloadSimpleBold } from "react-icons/pi";
 
 const Books = () => {
@@ -41,7 +41,7 @@ const Books = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="bg-indigo-600 container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
         {books.map((book) => (
           <div

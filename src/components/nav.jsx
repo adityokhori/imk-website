@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "./button";
 
+
 const Nav = () => {
+  
   let Links = [
     { name: "Home", link: "/" },
-    { name: "About", link: "/hello" },
+    { name: "About", link: "/" },
     { name: "Contact", link: "/" },
   ];
+
   let [open, setOpen] = useState(false);
   return (
     <div className="shadow-md w-full fixed top-0 left-0">
@@ -34,21 +38,16 @@ const Nav = () => {
         >
           {Links.map((link) => (
             <li key={link.name} className="md:ml-8 text-xl md:my-0 my-7">
-              <a
-                href={link.link}
+              <Link
+                to={link.link}
                 className="text-gray-800 hover:text-gray-400 duration-500 font-[Poppins]"
               >
                 {link.name}
-              </a>
+              </Link>
             </li>
           ))}
-
-          <li className="md:my-0 my-7">
-            <Button stats="md:ml-8">Login</Button>
-          </li>
-          <li className="md:my-0 my-7">
-            <Button stats="md:ml-8">Sign Up</Button>
-          </li>
+          <li><Button to={"/login"}>Login</Button></li>
+          <li><Button to={"/register"}>Sign Up</Button></li>
         </ul>
       </div>
     </div>
