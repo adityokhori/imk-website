@@ -91,7 +91,7 @@ const Nav = () => {
           ) : (
             <>
               <li>
-                <h3 className="bg-slate-400 ml-4">
+                <h3 className="bg-green-400 ml-4 p-2">
                   {user.email}
                 </h3>
               </li>

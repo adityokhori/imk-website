@@ -75,7 +75,7 @@ const Books = () => {
                 </>
               ):(
                 <>
-                  <Button to={`/book/${book.id}}`}>Read</Button>
+                  <Button to={`/book/${book.id}`}>Read</Button>
                 </>
               )}
               
