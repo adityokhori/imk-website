@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/button";
-import { PiDownloadSimpleBold } from "react-icons/pi";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../config/firebase-config";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -21,6 +23,13 @@ const Books = () => {
     };
 
     fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
@@ -54,12 +63,22 @@ const Books = () => {
               className="w-1/2 h-40 object-fill mb-4 rounded-lg"
             />
             <h2 className="text-lg font-semibold line-clamp-2">{book.title}</h2>
+            <h3>{book.id}</h3>
             <p className="text-gray-600 line-clamp-1">
               {book.authors.map((author) => author.name).join(", ")}
             </p>
             <div className="mt-auto">
               <br></br>
-              <Button>Read</Button>
+              {!user ? (
+                <>
+                  <Button>Login</Button>
+                </>
+              ):(
+                <>
+                  <Button to={`/book/${book.id}}`}>Read</Button>
+                </>
+              )}
+              
             </div>
           </div>
         ))}

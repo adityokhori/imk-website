@@ -6,6 +6,7 @@ import Books from "./pages/Books";
 import Nav from "./components/nav";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage"; 
+import BookDetail from "./pages/BookDetail";
 
 const AppLayout = () =>{
   return(
@@ -18,7 +19,7 @@ const AppLayout = () =>{
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout/>,
+    element: <AppLayout/>,    
     children: [
       {
         path: "/",
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <RegisterPage/>,
       },
+      {
+        path: "/book/:id",
+        element: <BookDetail />,
+      }
     ]
   },
 
@@ -39,7 +44,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <div className="bg-indigo-600">
+    <div className="bg-indigo-600 w-full h-auto">
       <RouterProvider router={router} />
     </div>
   </React.StrictMode>

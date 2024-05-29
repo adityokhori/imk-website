@@ -1,24 +1,52 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./button";
-
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../config/firebase-config";
 
 const Nav = () => {
-  
   let Links = [
     { name: "Home", link: "/" },
     { name: "About", link: "/" },
     { name: "Contact", link: "/" },
   ];
-
   let [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      console.log(user?.email);
+      navigate("/login");
+    } catch (error) {
+      console.error("error logout", error);
+    }
+  };
+
+  const ButtonLogOut = ({ children }) => {
+    return (
+      <button
+        className={`bg-indigo-600 text-white font-[Poppins] py-2 px-6 rounded hover:bg-indigo-400 duration-500 md:ml-8`}
+        onClick={logout}
+      >
+        {children}
+      </button>
+    );
+  };
+
   return (
     <div className="shadow-md w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between bg-white py-4 md:px-10 px-7">
-        <div
-          className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] 
-      text-gray-800"
-        >
+        <div className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] text-gray-800">
           <span className="text-3xl text-indigo-600 mr-1 pt-2">
             <ion-icon name="logo-ionic"></ion-icon>
           </span>
@@ -34,7 +62,8 @@ const Nav = () => {
 
         <ul
           className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-white md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
-            open ? "top-20 " : "top-[-490px]"}`}
+            open ? "top-20 " : "top-[-490px]"
+          }`}
         >
           {Links.map((link) => (
             <li key={link.name} className="md:ml-8 text-xl md:my-0 my-7">
@@ -46,8 +75,31 @@ const Nav = () => {
               </Link>
             </li>
           ))}
-          <li><Button to={"/login"}>Login</Button></li>
-          <li><Button to={"/register"}>Sign Up</Button></li>
+          {!user ? (
+            <>
+              <li>
+                <Button to={"/login"} stats={"md:ml-8"}>
+                  Login
+                </Button>
+              </li>
+              <li>
+                <Button to={"/register"} stats={"md:ml-8"}>
+                  Sign Up
+                </Button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <h3 className="bg-slate-400 ml-4">
+                  {user.email}
+                </h3>
+              </li>
+              <li>
+                <ButtonLogOut>Logout</ButtonLogOut>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>

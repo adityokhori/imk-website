@@ -6,6 +6,15 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      console.log("register beres");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSignUp = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -78,6 +87,7 @@ const RegisterPage = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              onClick={register}
             >
               Sign Up
             </button>
