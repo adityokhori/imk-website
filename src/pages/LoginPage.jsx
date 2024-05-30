@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {signInWithEmailAndPassword,signInWithPopup,onAuthStateChanged} from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase-config";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setEmailVerified(currentUser.emailVerified);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const signin = async () => {
     try {
       console.log("otw login");
       await signInWithEmailAndPassword(auth, email, password);
+      console.log("verified");
       console.log("beres login");
       navigate("/");
     } catch (error) {
@@ -29,10 +45,16 @@ const LoginPage = () => {
     }
   };
 
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    signin();
+    await signin();
+    if (user && user.emailVerified) {
+      console.log("verified");
+      console.log("beres login");
+      navigate("/");
+    } else {
+      console.log('belumverified');
+    }
   };
 
   return (

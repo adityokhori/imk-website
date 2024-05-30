@@ -12,12 +12,16 @@ const Nav = () => {
   ];
   let [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        setEmailVerified(currentUser.emailVerified);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -90,14 +94,16 @@ const Nav = () => {
             </>
           ) : (
             <>
-              <li>
-                <h3 className="bg-green-400 ml-4 p-2">
-                  {user.email}
-                </h3>
-              </li>
-              <li>
-                <ButtonLogOut>Logout</ButtonLogOut>
-              </li>
+              {emailVerified && (
+                <>
+                  <li>
+                    <h3 className="bg-green-400 ml-4 p-2">{user.email}</h3>
+                  </li>
+                  <li>
+                    <ButtonLogOut>Logout</ButtonLogOut>
+                  </li>
+                </>
+              )}
             </>
           )}
         </ul>

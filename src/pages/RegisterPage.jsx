@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {createUserWithEmailAndPassword} from "firebase/auth";
+import {createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
 import { auth } from "../config/firebase-config";
 
 const RegisterPage = () => {
@@ -12,12 +12,39 @@ const RegisterPage = () => {
   
   const register = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("register beres");
-      navigate("/login")
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;      
+      await sendEmailVerification(user);
+      console.log('Email verification sent to', user.email);
+          console.log("register beres");
+          saveBooksToFirestore();
+          console.log("beres database save book");
+          navigate("/login")
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const saveBooksToFirestore = async () => {
+    const books = await fetchBooksFromGutendex();
+    const booksCollection = collection(db, 'books');
+    
+    books.forEach(async (book) => {
+      await addDoc(booksCollection, {
+        title: book.title,
+        author: book.authors[0]?.name || 'Unknown',
+        gutenberg_id: book.id,
+        download_count: book.download_count,
+        language: book.languages.join(', '),
+        subjects: book.subjects.join(', ')
+      });
+    });
+  };
+
+  const fetchBooksFromGutendex = async () => {
+    const response = await fetch('https://gutendex.com/books');
+    const data = await response.json();
+    return data.results;
   };
 
   const handleSignUp = (e) => {
