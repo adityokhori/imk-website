@@ -1,14 +1,18 @@
-// pages/BookDetail.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../config/firebase-config";
 import Button from "../components/button";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const BookDetail = () => {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -24,6 +28,16 @@ const BookDetail = () => {
 
     fetchBook();
   }, [id]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setEmailVerified(currentUser.emailVerified);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   if (loading) {
     return (
@@ -42,6 +56,23 @@ const BookDetail = () => {
     );
   }
 
+  const saveBook = async () => {
+    console.log("Saved Book:", book);
+    try {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const savedBooksCollectionRef = collection(userDocRef, "savedBooks");
+        const bookDocRef = doc(savedBooksCollectionRef, String(book.id)); // Menggunakan book.id sebagai id buku
+        await setDoc(bookDocRef, book);
+        console.log("Book saved successfully!");
+      } else {
+        console.log("User not logged in!");
+      }
+    } catch (error) {
+      console.error("Error saving book:", error);
+    }
+  };
+
   return (
     <div className="mt-20">
       <div className="flex flex-row justify-center items-center ">
@@ -51,7 +82,7 @@ const BookDetail = () => {
           <p>{book.authors.map((author) => author.name).join(", ")}</p>
           <Button>Read Now</Button>
           <Button>Download</Button>
-          <Button>Save</Button>
+          <Button onClick={saveBook}>Save</Button>
         </div>
       </div>
     </div>

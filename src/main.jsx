@@ -7,6 +7,7 @@ import Nav from "./components/nav";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage"; 
 import BookDetail from "./pages/BookDetail";
+import MyBooks from "./pages/MyBooks";
 
 const AppLayout = () =>{
   return(
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/book/:id",
         element: <BookDetail />,
+      },
+      {
+        path: "/mybooks",
+        element: <MyBooks />,
       }
     ]
   },
