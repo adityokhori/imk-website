@@ -8,7 +8,7 @@ const Nav = () => {
   let Links = [
     { name: "Home", link: "/" },
     { name: "About", link: "/" },
-    { name: "Contact", link: "/" },
+    { name: "My Books", link: "/mybooks" },
   ];
   let [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
@@ -79,7 +79,7 @@ const Nav = () => {
               </Link>
             </li>
           ))}
-          {!user ? (
+          {!user || !emailVerified ? (
             <>
               <li>
                 <Button to={"/login"} stats={"md:ml-8"}>
@@ -94,16 +94,12 @@ const Nav = () => {
             </>
           ) : (
             <>
-              {emailVerified && (
-                <>
-                  <li>
-                    <h3 className="bg-green-400 ml-4 p-2">{user.email}</h3>
-                  </li>
-                  <li>
-                    <ButtonLogOut>Logout</ButtonLogOut>
-                  </li>
-                </>
-              )}
+              <li>
+                <h3 className="bg-green-400 ml-4 p-2">{user.email}</h3>
+              </li>
+              <li>
+                <ButtonLogOut>Logout</ButtonLogOut>
+              </li>
             </>
           )}
         </ul>

@@ -25,27 +25,6 @@ const RegisterPage = () => {
     }
   };
 
-  const saveBooksToFirestore = async () => {
-    const books = await fetchBooksFromGutendex();
-    const booksCollection = collection(db, 'books');
-    
-    books.forEach(async (book) => {
-      await addDoc(booksCollection, {
-        title: book.title,
-        author: book.authors[0]?.name || 'Unknown',
-        gutenberg_id: book.id,
-        download_count: book.download_count,
-        language: book.languages.join(', '),
-        subjects: book.subjects.join(', ')
-      });
-    });
-  };
-
-  const fetchBooksFromGutendex = async () => {
-    const response = await fetch('https://gutendex.com/books');
-    const data = await response.json();
-    return data.results;
-  };
 
   const handleSignUp = (e) => {
     e.preventDefault();

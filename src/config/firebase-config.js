@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {getAuth, GoogleAuthProvider} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBw8MWMZxqmUDBS6HWkNC0PM0-6KPV0Csw",
   authDomain: "imk-ebook.firebaseapp.com",

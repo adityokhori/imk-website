@@ -10,7 +10,8 @@ import { auth, googleProvider } from "../config/firebase-config";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,9 +29,7 @@ const LoginPage = () => {
     try {
       console.log("otw login");
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("verified");
       console.log("beres login");
-      navigate("/");
     } catch (error) {
       console.log("error login", error);
     }
@@ -48,15 +47,21 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     await signin();
-    if (user && user.emailVerified) {
-      console.log("verified");
-      console.log("beres login");
-      navigate("/");
-    } else {
-      console.log('belumverified');
-    }
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setEmailVerified(currentUser.emailVerified);
+        if (currentUser.emailVerified) {
+          console.log("verified");
+          console.log("beres login");
+          navigate("/");
+        } else {
+          console.log("belum verified");
+        }
+      }
+    });
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
