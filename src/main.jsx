@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage"; 
 import BookDetail from "./pages/BookDetail";
 import MyBooks from "./pages/MyBooks";
+import BookRead from "./pages/BooksRead";
 
 const AppLayout = () =>{
   return(
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
         element: <BookDetail />,
       },
       {
+        path: "/book/read/:userId/:bookId",
+        element: <BookRead />,
+      },
+      {
         path: "/mybooks",
         element: <MyBooks />,
       }
@@ -49,7 +54,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <div className="bg-indigo-600 w-full h-auto">
+    <div className="w-full">
       <RouterProvider router={router} />
     </div>
   </React.StrictMode>

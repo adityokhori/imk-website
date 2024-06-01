@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Button from "../components/button";
+import Button from "../components/Button/button";
 import {Link} from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../config/firebase-config";
@@ -61,13 +61,13 @@ const Books = () => {
   }
 
   return (
-    <div className="bg-indigo-600 container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-20">
         {books.map((book) => (
           !user || !emailVerified ? (
             <div 
               key={book.id} 
-              className="flex flex-col items-center justify-center bg-green-300 p-4 rounded-lg shadow-md cursor-not-allowed"
+              className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed"
               onClick={warningLogin}
             >
               <img
@@ -85,7 +85,7 @@ const Books = () => {
             </div>
           ) : (
             <Link to={`/book/${book.id}`} key={book.id} >
-              <div className="flex flex-col items-center justify-center bg-green-300 p-4 rounded-lg shadow-md">
+              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md">
                 <img
                   src={book.formats["image/jpeg"]}
                   alt={book.title}

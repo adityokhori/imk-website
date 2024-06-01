@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../config/firebase-config";
-import Button from "../components/button";
+import Button from "../components/Button/button";
 import { collection, doc, setDoc } from "firebase/firestore";
 
 const BookDetail = () => {
@@ -62,7 +62,7 @@ const BookDetail = () => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
         const savedBooksCollectionRef = collection(userDocRef, "savedBooks");
-        const bookDocRef = doc(savedBooksCollectionRef, String(book.id)); // Menggunakan book.id sebagai id buku
+        const bookDocRef = doc(savedBooksCollectionRef, String(book.id));
         await setDoc(bookDocRef, book);
         console.log("Book saved successfully!");
       } else {

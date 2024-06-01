@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "./button";
+import Button from "./Button/button";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 
@@ -82,12 +82,12 @@ const Nav = () => {
           {!user || !emailVerified ? (
             <>
               <li>
-                <Button to={"/login"} stats={"md:ml-8"}>
+                <Button to={"/login"} stats={"py-2 px-6 md:ml-8"}>
                   Login
                 </Button>
               </li>
               <li>
-                <Button to={"/register"} stats={"md:ml-8"}>
+                <Button to={"/register"} stats={"py-2 px-6 md:ml-8"}>
                   Sign Up
                 </Button>
               </li>
