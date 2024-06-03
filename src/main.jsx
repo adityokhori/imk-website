@@ -9,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import BookDetail from "./pages/BookDetail";
 import MyBooks from "./pages/MyBooks";
 import BookRead from "./pages/BooksRead";
+import AboutPage from "./pages/AboutPage";
 
 const AppLayout = () =>{
   return(
@@ -46,7 +47,11 @@ const router = createBrowserRouter([
       {
         path: "/mybooks",
         element: <MyBooks />,
-      }
+      },
+      {
+        path: "/about",
+        element: <AboutPage/>,
+      },
     ]
   },
 

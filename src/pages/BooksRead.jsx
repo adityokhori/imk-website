@@ -25,13 +25,22 @@ const BookRead = () => {
 
     fetchBookContent();
   }, [bookId]);
-
+  
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+        Loading...
+      </p>
+    );
   }
-
+  
   if (error) {
-    return <p>Error: {error.message}</p>;
+    console.log(error.message);
+    return (
+      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+        Error: {error.message}
+      </p>
+    );
   }
 
   return (

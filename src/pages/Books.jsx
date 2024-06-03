@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Button from "../components/Button/button";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../config/firebase-config";
+import { auth } from "../config/firebase-config";
+import SearchBooks from "../components/SearchBooks";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -11,11 +11,13 @@ const Books = () => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get("https://gutendex.com/books/");
+        const response = await axios.get(`https://gutendex.com/books/?page=${currentPage}`);
         setBooks(response.data.results);
         setLoading(false);
       } catch (error) {
@@ -25,7 +27,7 @@ const Books = () => {
     };
 
     fetchBooks();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -37,8 +39,6 @@ const Books = () => {
     return () => unsubscribe();
   }, []);
 
-
-
   if (loading) {
     return (
       <p className="flex min-h-screen justify-center items-center text-2xl text-white">
@@ -46,7 +46,7 @@ const Books = () => {
       </p>
     );
   }
-  
+
   if (error) {
     console.log(error.message);
     return (
@@ -56,45 +56,57 @@ const Books = () => {
     );
   }
 
-  const warningLogin = () =>{
-        alert('Silakan login terlebih dahulu untuk melihat detail buku.');
-  }
+  const warningLogin = () => {
+    alert('Silakan login terlebih dahulu untuk melihat detail buku.');
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const booksToDisplay = searchResults.length > 0 ? searchResults : books;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-20">
-        {books.map((book) => (
+    <div className="container mx-auto px-4 py-8 mt-20">
+      <div className="flex justify-center items-center">
+        <SearchBooks setSearchResults={setSearchResults} />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+        {booksToDisplay.map((book) => (
           !user || !emailVerified ? (
-            <div 
-              key={book.id} 
+            <div
+              key={book.id}
               className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed"
               onClick={warningLogin}
             >
-              <img
-                src={book.formats["image/jpeg"]}
-                alt={book.title}
-                className="w-1/2 h-40 object-fill mb-4 rounded-lg"
-              />
+              <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
+                <img
+                  src={book.formats["image/jpeg"]}
+                  alt={book.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <h2 className="text-lg font-semibold line-clamp-2">
                 {book.title}
               </h2>
-              <h3>{book.id}</h3>
               <p className="text-gray-600 line-clamp-1">
                 {book.authors.map((author) => author.name).join(", ")}
               </p>
             </div>
           ) : (
-            <Link to={`/book/${book.id}`} key={book.id} >
+            <Link to={`/book/${book.id}`} key={book.id}>
               <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md">
-                <img
-                  src={book.formats["image/jpeg"]}
-                  alt={book.title}
-                  className="w-1/2 h-40 object-fill mb-4 rounded-lg"
-                />
+                <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
+                  <img
+                    src={book.formats["image/jpeg"]}
+                    alt={book.title}
+                    className="w-50 h-50 object-cover"
+                  />
+                </div>
                 <h2 className="text-lg font-semibold line-clamp-2">
                   {book.title}
                 </h2>
-                <h3>{book.id}</h3>
+                <h3>Book ID: {book.id}</h3>
                 <p className="text-gray-600 line-clamp-1">
                   {book.authors.map((author) => author.name).join(", ")}
                 </p>
@@ -103,13 +115,20 @@ const Books = () => {
           )
         ))}
       </div>
+
+      <div className="flex justify-center mt-8">
+        {[...Array(10)].map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default Books;
-
-{/* <div className="mt-auto bg-yellow-300 container">
-{!user || !emailVerified ? (apa) : (apa)}
-</div>
-*/}

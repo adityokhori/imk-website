@@ -3,14 +3,21 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../config/firebase-config";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import Button from "../components/Button/button";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
 
 const MyBooks = () => {
+  const { bookId } = useParams();
+
   const [savedBooks, setSavedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [deleteBookId, setDeleteBookId] = useState(null);
+  const [download, setDownload] = useState(false);
+  const [book, setBook] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -45,6 +52,7 @@ const MyBooks = () => {
 
     fetchSavedBooks();
   }, [user, emailVerified, deleteBookId]);
+
 
   const handleDelete = async (bookId) => {
     try {
@@ -87,16 +95,39 @@ const MyBooks = () => {
     }
   };
 
+  const downloadBook = async (bookId) => {
+    console.log("Downloading book", bookId);
+    console.log(`${bookId}`);
+    try {
+      const response = await axios.get(`http://localhost:3001/proxy/${bookId}`, {
+        responseType: 'blob' 
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'book.zip');
+      document.body.appendChild(link);
+      link.click(); 
+      setDownload(true);
+      console.log("Download complete!");
+    } catch (error) {
+      console.error("Error downloading book:", error);
+      alert('Error downloading book. Please try again later.');
+    }
+  };
+  
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 mt-20 bg-green-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 mt-20 ">
         {savedBooks.length === 0 ? (
           <p className="text-white text-2xl">No saved books found.</p>
         ) : (
           savedBooks.map((book) => (
             <div
               key={book.id}
-              className="flex flex-col bg-yellow-300 border-2 border-inherit p-4 rounded-lg shadow-lg "
+              className="flex flex-col border-2 border-inherit p-4 rounded-lg shadow-lg "
             >
               <div className="flex flex-row">
                 <img
@@ -116,7 +147,7 @@ const MyBooks = () => {
               <div className="flex-grow"></div>
               <div className="flex flex-row items-center justify-center  mt-4">
                 <Button stats="py-1 px-2 mx-2" to={`/book/read/${user.uid}/${book.id}`}>Read</Button>
-                <Button stats="py-1 px-2 mx-2">Download</Button>
+                <Button stats="py-1 px-2 mx-2" onClick={() => downloadBook(book.id)} >Download</Button>
                 <Button stats="py-1 px-2 mx-2" onClick={() => handleConfirmDelete(book.id)}>Delete</Button>
               </div>
             </div>

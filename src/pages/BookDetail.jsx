@@ -8,6 +8,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 
 const BookDetail = () => {
   const { id } = useParams();
+  const [download, setDownload] = useState(false);
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -65,6 +66,7 @@ const BookDetail = () => {
         const bookDocRef = doc(savedBooksCollectionRef, String(book.id));
         await setDoc(bookDocRef, book);
         console.log("Book saved successfully!");
+        alert('Book saved successfully!');
       } else {
         console.log("User not logged in!");
       }
@@ -73,6 +75,28 @@ const BookDetail = () => {
     }
   };
 
+  const downloadBook = async () => {
+    console.log("Downloading book", book);
+    console.log(`${book.id}`);
+    try {
+      const response = await axios.get(`http://localhost:3001/proxy/${book.id}`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'book.zip');
+      document.body.appendChild(link);
+      link.click(); 
+      setDownload(true);
+      console.log("Download complete!");
+    } catch (error) {
+      console.error("Error downloading book:", error);
+      alert('Error downloading book. Please try again later.');
+    }
+  };
+  
+  
   return (
     <div className="mt-20">
       <div className="flex flex-row justify-center items-center ">
@@ -81,7 +105,7 @@ const BookDetail = () => {
           <h1>{book.title}</h1>
           <p>{book.authors.map((author) => author.name).join(", ")}</p>
           <Button>Read Now</Button>
-          <Button>Download</Button>
+          <Button onClick={downloadBook}>Download</Button>
           <Button onClick={saveBook}>Save</Button>
         </div>
       </div>
