@@ -66,7 +66,7 @@ const BookDetail = () => {
         const bookDocRef = doc(savedBooksCollectionRef, String(book.id));
         await setDoc(bookDocRef, book);
         console.log("Book saved successfully!");
-        alert('Book saved successfully!');
+        alert("Book saved successfully!");
       } else {
         console.log("User not logged in!");
       }
@@ -79,34 +79,49 @@ const BookDetail = () => {
     console.log("Downloading book", book);
     console.log(`${book.id}`);
     try {
-      const response = await axios.get(`http://localhost:3001/proxy/${book.id}`, {
-        responseType: 'blob'
-      });
+      const response = await axios.get(
+        `http://localhost:3001/proxy/${book.id}`,
+        {
+          responseType: "blob",
+        }
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'book.zip');
+      link.setAttribute("download", "book.zip");
       document.body.appendChild(link);
-      link.click(); 
+      link.click();
       setDownload(true);
       console.log("Download complete!");
     } catch (error) {
       console.error("Error downloading book:", error);
-      alert('Error downloading book. Please try again later.');
+      alert("Error downloading book. Please try again later.");
     }
   };
-  
-  
+
   return (
-    <div className="mt-20">
-      <div className="flex flex-row justify-center items-center ">
-        <img src={book.formats["image/jpeg"]} alt={book.title} />
-        <div>
-          <h1>{book.title}</h1>
-          <p>{book.authors.map((author) => author.name).join(", ")}</p>
-          <Button>Read Now</Button>
-          <Button onClick={downloadBook}>Download</Button>
-          <Button onClick={saveBook}>Save</Button>
+    <div>
+      <div className="flex flex-row justify-center items-center min-h-screen">
+        <img
+          src={book.formats["image/jpeg"]}
+          alt={book.title}
+          className="w-1/6"
+        />
+        <div className="ml-10 flex flex-col justify-center items-start w-1/3 h-80">
+          <h1 className="text-4xl font-bold">{book.title}</h1>
+          <p>Authors: {book.authors.map((author) => author.name).join(", ")}</p>
+          <p>Translators: {book.translators.map((translator) => translator.name).join(", ")}</p>
+          <p>Language: {book.languages}</p>
+          <p>Subjects: {book.subjects}</p>
+          <p>Bookshelves: {book.bookshelves}</p>
+          <p>Total downloaded: {book.download_count}</p>
+
+          <br></br>
+          <div className="grid grid-cols-3 grid-flow-col gap-7">
+            <Button stats="p-1">Read Now</Button>
+            <Button onClick={downloadBook} stats="p-1">Download</Button>
+            <Button onClick={saveBook} stats="p-1">Save</Button>
+          </div>
         </div>
       </div>
     </div>

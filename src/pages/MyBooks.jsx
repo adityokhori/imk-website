@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom";
 
 const MyBooks = () => {
   const { bookId } = useParams();
-
   const [savedBooks, setSavedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,7 +65,7 @@ const MyBooks = () => {
 
   if (loading) {
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Loading...
       </p>
     );
@@ -74,7 +73,7 @@ const MyBooks = () => {
 
   if (error) {
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Error: {error.message}
       </p>
     );
@@ -82,7 +81,7 @@ const MyBooks = () => {
 
   if (!user || !emailVerified) {
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Please log in and verify your email to see your saved books.
       </p>
     );

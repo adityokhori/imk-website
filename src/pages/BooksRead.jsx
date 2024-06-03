@@ -28,7 +28,7 @@ const BookRead = () => {
   
   if (loading) {
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Loading...
       </p>
     );
@@ -37,7 +37,7 @@ const BookRead = () => {
   if (error) {
     console.log(error.message);
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Error: {error.message}
       </p>
     );

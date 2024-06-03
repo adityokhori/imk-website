@@ -12,7 +12,7 @@ app.use(cors());
 app.get('/book/:bookId', async (req, res) => {
   const { bookId } = req.params;
   try {
-    const response = await fetch(`https://www.gutenberg.org/ebooks/${bookId}.txt.utf-8`);
+    const response = await fetch(`https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.txt`);
     const content = await response.text();
     res.send(content);
   } catch (error) {
@@ -26,7 +26,6 @@ app.get('/proxy/:bookId', async (req, res) => {
     const response = await axios.get(`https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}-h.zip`, {
       responseType: 'arraybuffer' 
     });
-    console.log(response);
     const data = Buffer.from(response.data, 'binary'); 
     res.set('Content-Type', 'application/octet-stream');
     res.send(data);

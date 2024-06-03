@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 import SearchBooks from "../components/SearchBooks";
+import SmoothScroll from 'smooth-scroll';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -41,7 +42,7 @@ const Books = () => {
 
   if (loading) {
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Loading...
       </p>
     );
@@ -50,7 +51,7 @@ const Books = () => {
   if (error) {
     console.log(error.message);
     return (
-      <p className="flex min-h-screen justify-center items-center text-2xl text-white">
+      <p className="flex min-h-screen justify-center items-center text-2xl text-black">
         Error: {error.message}
       </p>
     );
@@ -58,10 +59,16 @@ const Books = () => {
 
   const warningLogin = () => {
     alert('Silakan login terlebih dahulu untuk melihat detail buku.');
+
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    setTimeout (scrollToTop, 500);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"});
   };
 
   const booksToDisplay = searchResults.length > 0 ? searchResults : books;
@@ -71,9 +78,10 @@ const Books = () => {
       <div className="flex justify-center items-center">
         <SearchBooks setSearchResults={setSearchResults} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-12">
         {booksToDisplay.map((book) => (
           !user || !emailVerified ? (
+            <Link to="/login">
             <div
               key={book.id}
               className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed"
@@ -93,6 +101,7 @@ const Books = () => {
                 {book.authors.map((author) => author.name).join(", ")}
               </p>
             </div>
+            </Link>
           ) : (
             <Link to={`/book/${book.id}`} key={book.id}>
               <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md">
