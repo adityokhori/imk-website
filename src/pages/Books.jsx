@@ -75,9 +75,6 @@ const Books = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
-      <div className="flex justify-center items-center">
-        <SearchBooks setSearchResults={setSearchResults} />
-      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-12">
         {booksToDisplay.map((book) => (
           !user || !emailVerified ? (
@@ -115,7 +112,6 @@ const Books = () => {
                 <h2 className="text-lg font-semibold line-clamp-2">
                   {book.title}
                 </h2>
-                <h3>Book ID: {book.id}</h3>
                 <p className="text-gray-600 line-clamp-1">
                   {book.authors.map((author) => author.name).join(", ")}
                 </p>

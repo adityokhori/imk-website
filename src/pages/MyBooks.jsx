@@ -145,9 +145,9 @@ const MyBooks = () => {
               </div>
               <div className="flex-grow"></div>
               <div className="flex flex-row items-center justify-center  mt-4">
-                <Button stats="py-1 px-2 mx-2" to={`/book/read/${user.uid}/${book.id}`}>Read</Button>
-                <Button stats="py-1 px-2 mx-2" onClick={() => downloadBook(book.id)} >Download</Button>
-                <Button stats="py-1 px-2 mx-2" onClick={() => handleConfirmDelete(book.id)}>Delete</Button>
+                <Button stats="py-1 px-2 mx-2 bg-green-700 text-white hover:bg-green-600" to={`/book/read/${user.uid}/${book.id}`}>Read</Button>
+                <Button stats="py-1 px-2 mx-2 border border-black" onClick={() => downloadBook(book.id)} >Download</Button>
+                <Button stats="py-1 px-2 mx-2 bg-red-500 text-white hover:bg-red-400" onClick={() => handleConfirmDelete(book.id)}>Delete</Button>
               </div>
             </div>
           ))

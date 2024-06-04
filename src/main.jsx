@@ -5,36 +5,42 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Books from "./pages/Books";
 import Nav from "./components/nav";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage"; 
+import RegisterPage from "./pages/RegisterPage";
 import BookDetail from "./pages/BookDetail";
 import MyBooks from "./pages/MyBooks";
 import BookRead from "./pages/BooksRead";
 import AboutPage from "./pages/AboutPage";
+import LandingPage from "./pages/LandingPage";
 
-const AppLayout = () =>{
-  return(
+
+const AppLayout = () => {
+  return (
     <>
-      <Nav/>
-      <Outlet/>
+      <Nav />
+      <Outlet />
     </>
-  )
-}
+  );
+};
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout/>,    
+    path: "/",
+    element: <LandingPage/>,
+  },
+  {
+    element: <AppLayout />,
     children: [
       {
-        path: "/",
-        element: <Books/>,
-      },
-      {
         path: "/login",
-        element: <LoginPage/>,
+        element: <LoginPage />,
       },
       {
         path: "/register",
-        element: <RegisterPage/>,
+        element: <RegisterPage />,
+      },
+      {
+        path: "/book",
+        element: <Books />,
       },
       {
         path: "/book/:id",
@@ -50,11 +56,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <AboutPage/>,
+        element: <AboutPage />,
       },
-    ]
+    ],
   },
-
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

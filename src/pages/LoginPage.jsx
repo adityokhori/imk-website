@@ -6,6 +6,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase-config";
+import { FaGoogle } from "react-icons/fa";
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -38,7 +40,7 @@ const LoginPage = () => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/");
+      navigate("/book");
     } catch (error) {
       console.error("error sign in with Google", error);
     }
@@ -54,7 +56,7 @@ const LoginPage = () => {
         if (currentUser.emailVerified) {
           console.log("verified");
           console.log("beres login");
-          navigate("/");
+          navigate("/book");
         } else {
           console.log("belum verified");
         }
@@ -104,17 +106,17 @@ const LoginPage = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              className="w-full bg-orange-800 text-white py-2 px-4 rounded-md hover:bg-orange-900 focus:outline-none"
             >
               Login
             </button>
-            <div className="mt-5 flex flex-col justify-center items-center">
+            <div className="mt-5 flex justify-center items-center">
               <button
                 type="button"
                 onClick={signInWithGoogle}
-                className="bg-green-500 px-2 text-white rounded-md py-2 hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                className="  flex flex-row items-center px-2 text-black rounded-md py-2 hover:bg-slate-200"
               >
-                Sign In with Google
+                <FaGoogle className="w-6 h-5 mr-2"/>Sign In with Google
               </button>
             </div>
           </div>

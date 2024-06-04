@@ -48,23 +48,30 @@ const SearchBooks = ({ setSearchResults }) => {
   };
 
   return (
-    <div className="relative w-1/3 flex flex-row ">
+    <div className="relative w-full">
       <input
         type="text"
         id="search"
         value={query}
-        placeholder="Search your book..."
+        placeholder="Search books"
         onChange={handleSearch}
         onKeyDown={handleKeyDown}
         required
-        className="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+        className="p-2 w-full font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-orange-800 "
       />
       {results.length > 0 && (
-        <ul className="fixed z-10 w-1/2 bg-white border border-gray-300 rounded-md max-h-60 overflow-auto mt-16">
+        <ul className="fixed z-10 w-1/2 bg-white border border-gray-300 rounded-md max-h-60 overflow-auto mt-8">
           {results.map((book) => (
             <Link to={`/book/${book.id}`} key={book.id} onClick={handleResultClick}>
-              <li className="p-2 border-b border-gray-300 last:border-0">
-                {book.title}
+              <li className="flex items-center p-2 border-b border-gray-300 last:border-0">
+                <span className="flex-1">{book.title}</span>
+                {book.formats["image/jpeg"] && (
+                  <img
+                    src={book.formats["image/jpeg"]}
+                    alt={book.title}
+                    className="ml-2 w-8 h-10 object-cover"
+                  />
+                )}
               </li>
             </Link>
           ))}

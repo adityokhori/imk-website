@@ -8,6 +8,7 @@ import SearchBooks from "./SearchBooks";
 const Nav = () => {
   let Links = [
     { name: "Home", link: "/" },
+    { name: "Browser", link: "/book" },
     { name: "About", link: "/about" },
     { name: "My Books", link: "/mybooks" },
   ];
@@ -41,7 +42,7 @@ const Nav = () => {
   const ButtonLogOut = ({ children }) => {
     return (
       <button
-        className={`bg-indigo-600 text-white font-[Poppins] py-2 px-6 rounded hover:bg-indigo-400 duration-500 md:ml-8`}
+        className={`bg-orange-800 text-white font-[Poppins] py-2 px-6 rounded hover:bg-indigo-400 duration-500 md:ml-8`}
         onClick={logout}
       >
         {children}
@@ -51,12 +52,12 @@ const Nav = () => {
 
   return (
     <div className="z-20 shadow-md w-full fixed top-0 left-0">
-      <div className="md:flex items-center justify-between bg-white py-4 md:px-10 px-7">
+      <div className="md:flex items-center justify-between bg-orange-100 py-4 md:px-10 px-7">
         <div className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] text-gray-800">
-          <span className="text-3xl text-indigo-600 mr-1 pt-2">
-            <ion-icon name="logo-ionic"></ion-icon>
-          </span>
-          eBooKita
+          eBoo<span className="text-orange-800">Kita</span>
+        </div>
+        <div className="w-96">
+          <SearchBooks setSearchResults={setSearchResults}/> 
         </div>
         <div
           onClick={() => setOpen(!open)}
@@ -66,7 +67,7 @@ const Nav = () => {
         </div>
 
         <ul
-          className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-white md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
+          className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-orange-100 md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
             open ? "top-20 " : "top-[-490px]"
           }`}
         >
@@ -74,7 +75,7 @@ const Nav = () => {
             <li key={link.name} className="md:ml-8 text-xl md:my-0 my-7">
               <Link
                 to={link.link}
-                className="text-gray-800 hover:text-gray-400 duration-500 font-[Poppins]"
+                className="text-gray-800 hover:text-white hover:bg-orange-800 hover:px-4 py-2 duration-500 font-[Poppins]"
               >
                 {link.name}
               </Link>
@@ -83,12 +84,12 @@ const Nav = () => {
           {!user || !emailVerified ? (
             <>
               <li>
-                <Button to={"/login"} stats={"py-2 px-6 md:ml-8"}>
+                <Button to={"/login"} stats={"py-2 px-6 md:ml-8 text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"}>
                   Login
                 </Button>
               </li>
               <li>
-                <Button to={"/register"} stats={"py-2 px-6 md:ml-8"}>
+                <Button to={"/register"} stats={"py-2 px-6 md:ml-8  text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"}>
                   Sign Up
                 </Button>
               </li>
@@ -96,7 +97,7 @@ const Nav = () => {
           ) : (
             <>
               <li>
-                <h3 className="bg-green-400 ml-4 p-2">{user.email}</h3>
+                <h3 className="border border-orange-800 text-orange-800 ml-4 p-2">{user.email}</h3>
               </li>
               <li>
                 <ButtonLogOut>Logout</ButtonLogOut>

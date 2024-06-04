@@ -101,26 +101,29 @@ const BookDetail = () => {
 
   return (
     <div>
-      <div className="flex flex-row justify-center items-center min-h-screen">
+      <div className="flex flex-row justify-center items-center min-h-screen ">
         <img
           src={book.formats["image/jpeg"]}
           alt={book.title}
-          className="w-1/6"
+          className="w-1/5"
         />
-        <div className="ml-10 flex flex-col justify-center items-start w-1/3 h-80">
+        <div className="ml-16 flex flex-col justify-center items-start w-1/3 h-80">
           <h1 className="text-4xl font-bold">{book.title}</h1>
-          <p>Authors: {book.authors.map((author) => author.name).join(", ")}</p>
+          <p className="text-2xl text-slate-500">{book.authors.map((author) => author.name).join(", ")}</p>
           <p>Translators: {book.translators.map((translator) => translator.name).join(", ")}</p>
           <p>Language: {book.languages}</p>
-          <p>Subjects: {book.subjects}</p>
-          <p>Bookshelves: {book.bookshelves}</p>
-          <p>Total downloaded: {book.download_count}</p>
+          <p>Genres: <br/>{book.subjects}</p>
+          <p>{book.bookshelves}</p>
+          <br/>
+          <p>Total downloaded: <p className="font-semibold">{book.download_count}</p></p>
 
           <br></br>
-          <div className="grid grid-cols-3 grid-flow-col gap-7">
-            <Button stats="p-1">Read Now</Button>
-            <Button onClick={downloadBook} stats="p-1">Download</Button>
-            <Button onClick={saveBook} stats="p-1">Save</Button>
+          <div className="flex flex-col">
+            <Button stats="px-2 py-1 w-40 bg-green-700 text-white font-semibold hover:bg-green-500">Read Now</Button>
+            <div className="flex flex-row justify-between mt-2">
+              <Button onClick={downloadBook} stats="px-2 py-1 border border-black">Download</Button>
+              <Button onClick={saveBook} stats="ml-2 px-2 py-1 border border-black">+ Save</Button>
+            </div>
           </div>
         </div>
       </div>
