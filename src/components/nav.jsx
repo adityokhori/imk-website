@@ -34,7 +34,6 @@ const Nav = () => {
     try {
       await signOut(auth);
       console.log(user?.email);
-      navigate("/login");
     } catch (error) {
       console.error("error logout", error);
     }

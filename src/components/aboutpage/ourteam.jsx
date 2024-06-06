@@ -1,4 +1,5 @@
 import React from "react";
+import { MdPerson } from "react-icons/md";
 
 const OurTeam = () => {
   return (
@@ -33,10 +34,7 @@ const OurTeam = () => {
             </div>
           </div>
           <div className=" m-2 flex flex-col justify-center items-center">
-            <img
-              src="src/assets/rizki-clear.png"
-              className="w-4/5 bg-orange-200"
-            />
+            <MdPerson className="w-4/5 h-full bg-orange-200"/>
             <div className="flex flex-col justify-center items-start  mt-2">
               <h2>Rafli Hidayat</h2>
               <h2 className="text-gray-500">

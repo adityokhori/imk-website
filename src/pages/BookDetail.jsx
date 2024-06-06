@@ -190,9 +190,9 @@ const BookDetail = () => {
             {comments.length > 0 ? (
               <div>
                 {comments.map((comment, index) => (
-                  <div key={index} className="border border-gray-400 p-4 my-4">
-                    <p className="text-black font-bold">{comment.userName}</p>
-                    <p className="text-gray-800">"{comment.comment}"</p>
+                  <div key={index} className="flex flex-row shadow-md p-4 my-4">
+                    <p className="text-black font-bold">{comment.userName}:</p>
+                    <p className="text-gray-800 ml-2">"{comment.comment}"</p>
                   </div>
                 ))}
               </div>

@@ -58,7 +58,7 @@ const Books = () => {
   }
 
   const warningLogin = () => {
-    alert('Silakan login terlebih dahulu untuk melihat detail buku.');
+    alert('Please log in first to view book details.');
 
   };
 
@@ -81,14 +81,14 @@ const Books = () => {
             <Link to="/login">
             <div
               key={book.id}
-              className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed border-2 border-inherit"
+              className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md cursor-not-allowed border-2 border-inherit"
               onClick={warningLogin}
             >
               <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
                 <img
                   src={book.formats["image/jpeg"]}
                   alt={book.title}
-                  className="w-full h-full object-cover"
+                  className="w-50 h-50 object-cover"
                 />
               </div>
               <h2 className="text-lg font-semibold line-clamp-2">
@@ -106,7 +106,7 @@ const Books = () => {
                   <img
                     src={book.formats["image/jpeg"]}
                     alt={book.title}
-                    className="w-50 h-50 object-cover"
+                    className="w-50 h-50 object-fill"
                   />
                 </div>
                 <h2 className="text-lg font-semibold line-clamp-2">
