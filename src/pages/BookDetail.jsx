@@ -4,7 +4,9 @@ import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../config/firebase-config";
 import Button from "../components/Button/button";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
+import CommentReview from "../components/commentReview";
+
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -14,6 +16,12 @@ const BookDetail = () => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [showCommentReview, setShowCommentReview] = useState(false);
+
+  const toggleCommentReview = () => {
+    setShowCommentReview(!showCommentReview);
+  };
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -40,6 +48,25 @@ const BookDetail = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        if (book && user) {
+          const bookReviewsRef = collection(db, "bookReviews", id, "Reviews");
+          const commentSnapshot = await getDocs(bookReviewsRef);
+          const commentsList = commentSnapshot.docs.map((doc) => doc.data());
+          setComments(commentsList);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error.message);
+      }
+    };
+
+    if (user && book) {
+      fetchComments();
+    }
+  }, [id, user, book]);
+
   if (loading) {
     return (
       <p className="flex min-h-screen justify-center items-center text-2xl text-white">
@@ -58,14 +85,13 @@ const BookDetail = () => {
   }
 
   const saveBook = async () => {
-    console.log("Saved Book:", book);
     try {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
         const savedBooksCollectionRef = collection(userDocRef, "savedBooks");
         const bookDocRef = doc(savedBooksCollectionRef, String(book.id));
         await setDoc(bookDocRef, book);
-        console.log("Book saved successfully!");
+
         alert("Book saved successfully!");
       } else {
         console.log("User not logged in!");
@@ -76,8 +102,6 @@ const BookDetail = () => {
   };
 
   const downloadBook = async () => {
-    console.log("Downloading book", book);
-    console.log(`${book.id}`);
     try {
       const response = await axios.get(
         `http://localhost:3001/proxy/${book.id}`,
@@ -92,7 +116,6 @@ const BookDetail = () => {
       document.body.appendChild(link);
       link.click();
       setDownload(true);
-      console.log("Download complete!");
     } catch (error) {
       console.error("Error downloading book:", error);
       alert("Error downloading book. Please try again later.");
@@ -100,30 +123,87 @@ const BookDetail = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row justify-center items-center min-h-screen ">
+    <div className="flex flex-row justify-center items-center ">
+      <div className="fixed left-40 top-40 w-1/5 h-full ">
         <img
           src={book.formats["image/jpeg"]}
           alt={book.title}
-          className="w-1/5"
+          className="w-full h-auto"
         />
-        <div className="ml-16 flex flex-col justify-center items-start w-1/3 h-80">
+      </div>
+      <div className="w-1/4"></div>
+      <div className="mt-40 flex flex-col w-1/2 ">
+        <div>
           <h1 className="text-4xl font-bold">{book.title}</h1>
-          <p className="text-2xl text-slate-500">{book.authors.map((author) => author.name).join(", ")}</p>
-          <p>Translators: {book.translators.map((translator) => translator.name).join(", ")}</p>
-          <p>Language: {book.languages}</p>
-          <p>Genres: <br/>{book.subjects}</p>
-          <p>{book.bookshelves}</p>
-          <br/>
-          <p>Total downloaded: <p className="font-semibold">{book.download_count}</p></p>
-
-          <br></br>
+          <p className="text-2xl text-slate-500">
+            {book.authors.map((author) => author.name).join(", ")}
+          </p>
+          <p className="mt-4">
+            Translators:{" "}
+            {book.translators.map((translator) => translator.name).join(", ")}
+          </p>
+          <p>Language: English</p>
+          <p>
+            Genres: <br />
+            {book.subjects}
+          </p>
+          <p className="font-bold">{book.bookshelves}</p>
+          <br />
+          <p>
+            Total downloaded:{" "}
+            <span className="font-semibold">{book.download_count}</span>
+          </p>
+          <br />
           <div className="flex flex-col">
-            <Button stats="px-2 py-1 w-40 bg-green-700 text-white font-semibold hover:bg-green-500">Read Now</Button>
-            <div className="flex flex-row justify-between mt-2">
-              <Button onClick={downloadBook} stats="px-2 py-1 border border-black">Download</Button>
-              <Button onClick={saveBook} stats="ml-2 px-2 py-1 border border-black">+ Save</Button>
+            <Button
+              stats="px-2 py-1 w-40 bg-green-700 text-white font-semibold hover:bg-green-500"
+              to={`/book/read/${user?.uid}/${book.id}`}
+            >
+              Read Now
+            </Button>
+            <div className="flex flex-row mt-2">
+              <Button
+                onClick={downloadBook}
+                stats="px-2 py-1 border border-black"
+              >
+                Download
+              </Button>
+              <Button
+                onClick={saveBook}
+                stats="ml-2 px-2 py-1 border border-black"
+              >
+                + Save
+              </Button>
             </div>
+          </div>
+        </div>
+        <div className="w-full mt-8">
+          <button
+            onClick={toggleCommentReview}
+            className="bg-orange-800 text-white py-2 px-4 rounded"
+          >
+            {showCommentReview ? "Hide Comment Review" : "Write a Review"}
+          </button>
+          {showCommentReview && <CommentReview bookId={id} />}
+          <div className="mt-8 overflow-auto">
+            <h2 className="text-2xl font-bold">Community Reviews</h2>
+            {comments.length > 0 ? (
+              <div>
+                {comments.map((comment, index) => (
+                  <div key={index} className="border border-gray-400 p-4 my-4">
+                    <p className="text-black font-bold">{comment.userName}</p>
+                    <p className="text-gray-800">"{comment.comment}"</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <p>No comments yet. Be the first to comment!</p>
+                <br />
+                <br />
+                <br />
+              </>
+            )}
           </div>
         </div>
       </div>

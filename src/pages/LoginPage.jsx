@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase-config";
 import { FaGoogle } from "react-icons/fa";
-
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -46,6 +46,11 @@ const LoginPage = () => {
     }
   };
 
+  const forgotPassword = async () => {
+    await sendPasswordResetEmail(auth, email);
+    console.log("Password reset email sent");
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     await signin();
@@ -63,7 +68,7 @@ const LoginPage = () => {
       }
     });
   };
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -102,6 +107,12 @@ const LoginPage = () => {
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
             />
+            <h3
+              className="flex justify-end items-end m-1 text-sm cursor-pointer"
+              onClick={forgotPassword}
+            >
+              Forgot Password?
+            </h3>
           </div>
           <div>
             <button
@@ -116,9 +127,20 @@ const LoginPage = () => {
                 onClick={signInWithGoogle}
                 className="  flex flex-row items-center px-2 text-black rounded-md py-2 hover:bg-slate-200"
               >
-                <FaGoogle className="w-6 h-5 mr-2"/>Sign In with Google
+                <FaGoogle className="w-6 h-5 mr-2" />
+                Sign In with Google
               </button>
             </div>
+            <Link to="/register">
+              <div className="mt-5 flex justify-center items-center">
+                <button
+                  type="button"
+                  className="text-center w-full px-2 border border-black text-black rounded-md py-2 hover:bg-slate-200"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </Link>
           </div>
         </form>
       </div>

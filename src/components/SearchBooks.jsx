@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 const SearchBooks = ({ setSearchResults }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const resultsRef = useRef(null);
 
   const handleSearch = async (e) => {
     const searchQuery = e.target.value;
@@ -47,6 +48,19 @@ const SearchBooks = ({ setSearchResults }) => {
     setResults([]);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (resultsRef.current && !resultsRef.current.contains(event.target)) {
+        setResults([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="relative w-full">
       <input
@@ -57,14 +71,26 @@ const SearchBooks = ({ setSearchResults }) => {
         onChange={handleSearch}
         onKeyDown={handleKeyDown}
         required
-        className="p-2 w-full font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-orange-800 "
+        className="p-2 w-full font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-orange-800"
       />
       {results.length > 0 && (
-        <ul className="fixed z-10 w-1/2 bg-white border border-gray-300 rounded-md max-h-60 overflow-auto mt-8">
+        <ul
+          ref={resultsRef}
+          className="fixed z-10 w-1/2 bg-white border border-gray-300 rounded-md max-h-60 overflow-auto mt-8"
+        >
           {results.map((book) => (
-            <Link to={`/book/${book.id}`} key={book.id} onClick={handleResultClick}>
-              <li className="flex items-center p-2 border-b border-gray-300 last:border-0">
-                <span className="flex-1">{book.title}</span>
+            <Link
+              to={`/book/${book.id}`}
+              key={book.id}
+              onClick={handleResultClick}
+            >
+              <li className="flex items-center justify-between p-2 border-b border-gray-300 last:border-0 hover:bg-slate-200">
+                <div className="flex flex-col">
+                  <span className="flex-1 font-semibold">{book.title}</span>
+                  <span className="flex-1">
+                    {book.authors.map((author) => author.name).join(", ")}
+                  </span>
+                </div>
                 {book.formats["image/jpeg"] && (
                   <img
                     src={book.formats["image/jpeg"]}

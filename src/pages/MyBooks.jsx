@@ -5,7 +5,7 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import Button from "../components/Button/button";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 const MyBooks = () => {
   const { bookId } = useParams();
@@ -36,7 +36,7 @@ const MyBooks = () => {
           const savedBooksSnapshot = await getDocs(userDocRef);
           const savedBooksList = savedBooksSnapshot.docs.map((doc) => ({
             id: doc.id,
-            ...doc.data()
+            ...doc.data(),
           }));
           setSavedBooks(savedBooksList);
           setLoading(false);
@@ -51,7 +51,6 @@ const MyBooks = () => {
 
     fetchSavedBooks();
   }, [user, emailVerified, deleteBookId]);
-
 
   const handleDelete = async (bookId) => {
     try {
@@ -88,7 +87,9 @@ const MyBooks = () => {
   }
 
   const handleConfirmDelete = (bookId) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this book?");
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this book?"
+    );
     if (isConfirmed) {
       handleDelete(bookId);
     }
@@ -98,58 +99,76 @@ const MyBooks = () => {
     console.log("Downloading book", bookId);
     console.log(`${bookId}`);
     try {
-      const response = await axios.get(`http://localhost:3001/proxy/${bookId}`, {
-        responseType: 'blob' 
-      });
-      
+      const response = await axios.get(
+        `http://localhost:3001/proxy/${bookId}`,
+        {
+          responseType: "blob",
+        }
+      );
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'book.zip');
+      link.setAttribute("download", "book.zip");
       document.body.appendChild(link);
-      link.click(); 
+      link.click();
       setDownload(true);
       console.log("Download complete!");
     } catch (error) {
       console.error("Error downloading book:", error);
-      alert('Error downloading book. Please try again later.');
+      alert("Error downloading book. Please try again later.");
     }
   };
-  
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 mt-20 ">
         {savedBooks.length === 0 ? (
-          <p className="text-white text-2xl">No saved books found.</p>
+          <p className="text-black text-2xl">No saved books found.</p>
         ) : (
           savedBooks.map((book) => (
-            <div
-              key={book.id}
-              className="flex flex-col border-2 border-inherit p-4 rounded-lg shadow-lg "
-            >
-              <div className="flex flex-row">
-                <img
-                  src={book.formats["image/jpeg"]}
-                  alt={book.title}
-                  className="w-1/2 h-50 object-fill rounded-lg"
-                />
-                <div className="flex flex-col justify-center ml-2 w-1/2">
-                  <h2 className="text-lg font-semibold line-clamp-3">
-                    {book.title}
-                  </h2>
-                  <p className="text-gray-600 line-clamp-2">
-                    {book.authors.map((author) => author.name).join(", ")}
-                  </p>
+            <Link to={`/book/${book.id}`} key={book.id}>
+              <div
+                className="flex flex-col border-2 border-inherit p-4 rounded-lg shadow-lg "
+              >
+                <div className="flex flex-row">
+                  <img
+                    src={book.formats["image/jpeg"]}
+                    alt={book.title}
+                    className="w-1/2 h-50 object-fill rounded-lg"
+                  />
+                  <div className="flex flex-col justify-center ml-2 w-1/2">
+                    <h2 className="text-lg font-semibold line-clamp-3">
+                      {book.title}
+                    </h2>
+                    <p className="text-gray-600 line-clamp-2">
+                      {book.authors.map((author) => author.name).join(", ")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-grow"></div>
+                <div className="flex flex-row items-center justify-center  mt-4">
+                  <Button
+                    stats="py-1 px-2 mx-2 bg-green-700 text-white hover:bg-green-600"
+                    to={`/book/read/${user.uid}/${book.id}`}
+                  >
+                    Read
+                  </Button>
+                  <Button
+                    stats="py-1 px-2 mx-2 border border-black hover:bg-orange-200 hover:border-white"
+                    onClick={() => downloadBook(book.id)}
+                  >
+                    Download
+                  </Button>
+                  <Button
+                    stats="py-1 px-2 mx-2 bg-red-500 text-white hover:bg-red-400"
+                    onClick={() => handleConfirmDelete(book.id)}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </div>
-              <div className="flex-grow"></div>
-              <div className="flex flex-row items-center justify-center  mt-4">
-                <Button stats="py-1 px-2 mx-2 bg-green-700 text-white hover:bg-green-600" to={`/book/read/${user.uid}/${book.id}`}>Read</Button>
-                <Button stats="py-1 px-2 mx-2 border border-black" onClick={() => downloadBook(book.id)} >Download</Button>
-                <Button stats="py-1 px-2 mx-2 bg-red-500 text-white hover:bg-red-400" onClick={() => handleConfirmDelete(book.id)}>Delete</Button>
-              </div>
-            </div>
+            </Link>
           ))
         )}
       </div>

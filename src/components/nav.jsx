@@ -9,10 +9,11 @@ const Nav = () => {
   let Links = [
     { name: "Home", link: "/" },
     { name: "Browser", link: "/book" },
-    { name: "About", link: "/about" },
+    { name: "About Us", link: "/about" },
     { name: "My Books", link: "/mybooks" },
   ];
   let [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -54,16 +55,22 @@ const Nav = () => {
     <div className="z-20 shadow-md w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between bg-orange-100 py-4 md:px-10 px-7">
         <div className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] text-gray-800">
-          eBoo<span className="text-orange-800">Kita</span>
+          eBoo<span className="text-orange-800">Kita.</span>
         </div>
-        <div className="w-96">
-          <SearchBooks setSearchResults={setSearchResults}/> 
+        <div className="w-96 hidden md:block">
+          <SearchBooks setSearchResults={setSearchResults} />
         </div>
         <div
           onClick={() => setOpen(!open)}
           className="text-3xl absolute right-8 top-6 cursor-pointer md:hidden"
         >
           <ion-icon name={open ? "close" : "menu"}></ion-icon>
+        </div>
+        <div
+          onClick={() => setSearchOpen(!searchOpen)}
+          className="text-3xl absolute right-16 top-6 cursor-pointer md:hidden mr-2"
+        >
+          <ion-icon name="search"></ion-icon>
         </div>
 
         <ul
@@ -84,12 +91,22 @@ const Nav = () => {
           {!user || !emailVerified ? (
             <>
               <li>
-                <Button to={"/login"} stats={"py-2 px-6 md:ml-8 text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"}>
+                <Button
+                  to={"/login"}
+                  stats={
+                    "py-2 px-6 md:ml-8 text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"
+                  }
+                >
                   Login
                 </Button>
               </li>
               <li>
-                <Button to={"/register"} stats={"py-2 px-6 md:ml-8  text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"}>
+                <Button
+                  to={"/register"}
+                  stats={
+                    "py-2 px-6 md:ml-8  text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"
+                  }
+                >
                   Sign Up
                 </Button>
               </li>
@@ -97,7 +114,9 @@ const Nav = () => {
           ) : (
             <>
               <li>
-                <h3 className="border border-orange-800 text-orange-800 ml-4 p-2">{user.email}</h3>
+                <h3 className="border border-orange-800 text-orange-800 ml-4 p-2">
+                  {user.email}
+                </h3>
               </li>
               <li>
                 <ButtonLogOut>Logout</ButtonLogOut>
@@ -105,6 +124,11 @@ const Nav = () => {
             </>
           )}
         </ul>
+        {searchOpen && (
+          <div className="w-full md:hidden mt-5">
+            <SearchBooks setSearchResults={setSearchResults} />
+          </div>
+        )}
       </div>
     </div>
   );

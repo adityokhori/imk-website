@@ -1,15 +1,17 @@
 import React from "react";
+import OurTeam from "../components/aboutpage/ourteam";
+import FirstAbout from "../components/aboutpage/firstAbout";
+import VisiMisi from "../components/aboutpage/visimisi";
+import SocialMedia from "../components/aboutpage/sosialMedia"
 
 const AboutPage = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-green-200">
-      <div className="flex justify-between items-center bg-yellow-200 p-5">
-        <div className="w-2/3 bg-red-500 flex justify-center items-center">
-          <h2>FOTO</h2>
-        </div>
-        <div className="w-1/3 bg-green-500">
-          <h3>INI HALAMAN ABOUT</h3>
-        </div>
+    <div className="flex flex-col justify-center items-center min-h-screen px-20">
+      <div className="mt-40">
+        <FirstAbout/>
+        <OurTeam/>
+        <VisiMisi/>
+        <SocialMedia/>
       </div>
     </div>
   );

@@ -75,13 +75,13 @@ const Books = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {booksToDisplay.map((book) => (
           !user || !emailVerified ? (
             <Link to="/login">
             <div
               key={book.id}
-              className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed"
+              className="flex flex-col items-center justify-center p-4 rounded-lg shadow-md cursor-not-allowed border-2 border-inherit"
               onClick={warningLogin}
             >
               <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
@@ -101,7 +101,7 @@ const Books = () => {
             </Link>
           ) : (
             <Link to={`/book/${book.id}`} key={book.id}>
-              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md">
+              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md border-2 border-inherit">
                 <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
                   <img
                     src={book.formats["image/jpeg"]}
@@ -121,12 +121,12 @@ const Books = () => {
         ))}
       </div>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-12">
         {[...Array(10)].map((_, index) => (
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? 'bg-orange-800 text-white' : 'bg-gray-300 text-black'}`}
           >
             {index + 1}
           </button>
