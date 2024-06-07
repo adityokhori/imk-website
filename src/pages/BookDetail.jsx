@@ -7,7 +7,6 @@ import Button from "../components/Button/button";
 import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import CommentReview from "../components/commentReview";
 
-
 const BookDetail = () => {
   const { id } = useParams();
   const [download, setDownload] = useState(false);
@@ -190,9 +189,25 @@ const BookDetail = () => {
             {comments.length > 0 ? (
               <div>
                 {comments.map((comment, index) => (
-                  <div key={index} className="flex flex-row shadow-md p-4 my-4">
-                    <p className="text-black font-bold">{comment.userName}:</p>
-                    <p className="text-gray-800 ml-2">"{comment.comment}"</p>
+                  <div
+                    key={index}
+                    className="flex flex-row justify-between shadow-md p-4 my-4"
+                  >
+                    <div className="flex flex-col">
+                      <p className="text-black font-bold">
+                        {comment.userName}:
+                      </p>
+                      <p className="text-gray-800 ml-2">"{comment.comment}"</p>
+                    </div>
+                    <div className="flex jus">
+                      <p className="text-gray-800 ml-2">
+                      {new Date(comment.timestamp.seconds * 1000).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

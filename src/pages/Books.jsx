@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 import SearchBooks from "../components/SearchBooks";
 import SmoothScroll from 'smooth-scroll';
+import ScrollToTop from '../components/scrollToTop';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -17,6 +18,7 @@ const Books = () => {
 
   useEffect(() => {
     const fetchBooks = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`https://gutendex.com/books/?page=${currentPage}`);
         setBooks(response.data.results);
@@ -67,6 +69,7 @@ const Books = () => {
     setTimeout (scrollToTop, 500);
   };
 
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth"});
   };
@@ -101,7 +104,7 @@ const Books = () => {
             </Link>
           ) : (
             <Link to={`/book/${book.id}`} key={book.id}>
-              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md border-2 border-inherit">
+              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md border-2 border-inherit hover:bg-slate-100">
                 <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
                   <img
                     src={book.formats["image/jpeg"]}
@@ -132,6 +135,7 @@ const Books = () => {
           </button>
         ))}
       </div>
+      <ScrollToTop/>
     </div>
   );
 };

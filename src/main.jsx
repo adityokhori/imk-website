@@ -11,21 +11,25 @@ import MyBooks from "./pages/MyBooks";
 import BookRead from "./pages/BooksRead";
 import AboutPage from "./pages/AboutPage";
 import LandingPage from "./pages/LandingPage";
-
+import { motion } from "framer-motion";
 
 const AppLayout = () => {
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: -100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: "easeIn", delay: 0.2 }}
+    >
       <Nav />
       <Outlet />
-    </>
+    </motion.div>
   );
 };
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage/>,
+    element: <LandingPage />,
   },
   {
     path: "/login",

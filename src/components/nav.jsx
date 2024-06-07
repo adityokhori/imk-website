@@ -7,16 +7,28 @@ import SearchBooks from "./SearchBooks";
 
 const Nav = () => {
   let Links = [
-    { name: "Home", link: "/" },
     { name: "Browser", link: "/book" },
+    { name: "Genres" },
     { name: "About Us", link: "/about" },
     { name: "My Books", link: "/mybooks" },
   ];
-  let [open, setOpen] = useState(false);
+  let genres = [
+    { name: "Fiction", link: "/genre/fiction" },
+    { name: "Non-Fiction", link: "/genre/non-fiction" },
+    { name: "Science Fiction", link: "/genre/science-fiction" },
+    { name: "Fantasy", link: "/genre/fantasy" },
+    { name: "Thriller", link: "/genre/fantasy" },
+    { name: "Romance", link: "/genre/fantasy" },
+    { name: "Mistery", link: "/genre/fantasy" },
+  ];
+
+  const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [activeLink, setActiveLink] = useState("");
+  const [showGenres, setShowGenres] = useState(false);
 
   const navigate = useNavigate();
 
@@ -34,6 +46,7 @@ const Nav = () => {
     try {
       await signOut(auth);
       console.log(user?.email);
+      setActiveLink(""); // Clear active link on logout
     } catch (error) {
       console.error("error logout", error);
     }
@@ -42,7 +55,7 @@ const Nav = () => {
   const ButtonLogOut = ({ children }) => {
     return (
       <button
-        className={`bg-orange-800 text-white font-[Poppins] py-2 px-6 rounded hover:bg-indigo-400 duration-500 md:ml-8`}
+        className={`bg-red-500 text-white font-[Poppins] py-2 px-6 rounded hover:bg-red-400 duration-500 md:ml-8`}
         onClick={logout}
       >
         {children}
@@ -50,12 +63,23 @@ const Nav = () => {
     );
   };
 
+  const handleNavClick = (linkName) => {
+    setActiveLink(linkName);
+    if (linkName === "Genres") {
+      setShowGenres(!showGenres);
+    } else {
+      setShowGenres(false);
+    }
+  };
+
   return (
     <div className="z-20 shadow-md w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between bg-orange-100 py-4 md:px-10 px-7">
-        <div className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] text-gray-800">
-          eBoo<span className="text-orange-800">Kita.</span>
-        </div>
+        <Link to="/">
+          <div className="font-bold text-2xl cursor-pointer flex items-center font-[Poppins] text-gray-800">
+            eBoo<span className="text-orange-800">Kita.</span>
+          </div>
+        </Link>
         <div className="w-96 hidden md:block">
           <SearchBooks setSearchResults={setSearchResults} />
         </div>
@@ -78,13 +102,40 @@ const Nav = () => {
           }`}
         >
           {Links.map((link) => (
-            <li key={link.name} className="md:ml-8 text-xl md:my-0 my-7">
+            <li
+              key={link.name}
+              className="md:ml-8 text-xl md:my-0 my-7 relative"
+            >
               <Link
-                to={link.link}
-                className="text-gray-800 hover:text-white hover:bg-orange-800 hover:px-4 py-2 duration-500 font-[Poppins]"
+                to={link.link || "#"}
+                className={`${
+                  activeLink === link.name
+                    ? "bg-orange-800 text-white px-2 py-1"
+                    : "text-gray-800"
+                } hover:text-white hover:bg-orange-800 hover:px-2 py-1  duration-500 font-[Poppins]`}
+                onClick={() => handleNavClick(link.name)}
               >
                 {link.name}
               </Link>
+              {link.name === "Genres" && showGenres && (
+                <div className="container mx-auto">
+                  <ul className="absolute mt-8">
+                    {genres.map((genre) => (
+                      <li
+                        key={genre.name}
+                        className="bg-orange-100 w-96 py-2 px-4 hover:bg-orange-200 text-base"
+                      >
+                        <Link
+                          to={genre.link}
+                          onClick={() => setShowGenres(false)}
+                        >
+                          {genre.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </li>
           ))}
           {!user || !emailVerified ? (
@@ -93,7 +144,7 @@ const Nav = () => {
                 <Button
                   to={"/login"}
                   stats={
-                    "py-2 px-6 md:ml-8 text-orange-800 border border-orange-800 font-bold hover:bg-orange-800 hover:text-white"
+                    "py-2 px-6 md:ml-8 text-white bg-orange-800 font-bold hover:bg-orange-700 hover:text-white"
                   }
                 >
                   Login

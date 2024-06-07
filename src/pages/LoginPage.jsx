@@ -14,6 +14,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -99,7 +100,7 @@ const LoginPage = () => {
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               placeholder="Password..."
@@ -107,6 +108,14 @@ const LoginPage = () => {
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
             />
+            <input
+              id="check"
+              type="checkbox"
+              value={showPassword}
+              onChange={() => setShowPassword((prev) => !prev)}
+            />
+            <label for="check" className="ml-2">Show Password</label>
+
             <h3
               className="flex justify-end items-end m-1 text-sm cursor-pointer"
               onClick={forgotPassword}

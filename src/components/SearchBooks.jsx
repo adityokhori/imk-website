@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import debounce from 'lodash.debounce';
 
 const SearchBooks = ({ setSearchResults }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const resultsRef = useRef(null);
 
-  const handleSearch = async (e) => {
-    const searchQuery = e.target.value;
-    setQuery(searchQuery);
-
-    if (searchQuery.length > 2) {
+  const fetchSearchResults = async (searchQuery) => {
+    if (searchQuery.trim().length > 2) {
       try {
         const response = await axios.get(
           `https://gutendex.com/books/?search=${searchQuery}`
@@ -27,8 +25,21 @@ const SearchBooks = ({ setSearchResults }) => {
     }
   };
 
+  const debouncedFetchSearchResults = useCallback(debounce(fetchSearchResults, 300), []);
+
+  const handleSearch = (e) => {
+    const searchQuery = e.target.value;
+    setQuery(searchQuery);
+    if (searchQuery.trim()) {
+      debouncedFetchSearchResults(searchQuery);
+    } else {
+      setResults([]);
+      setSearchResults([]);
+    }
+  };
+
   const handleKeyDown = async (e) => {
-    if (e.key === "Enter" && query.length > 2) {
+    if (e.key === "Enter" && query.trim().length > 2) {
       try {
         const response = await axios.get(
           `https://gutendex.com/books/?search=${query}`
