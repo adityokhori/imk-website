@@ -31,7 +31,7 @@ const ScrollToTopButton = () => {
       className={`fixed bottom-4 right-4 p-3 rounded-full bg-orange-800 text-white hover:bg-orange-700 transition-opacity ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
-      style={{ transition: "opacity 0.3s" }}
+      style={{ transition: "opacity 0.5s" }}
     >
       <FaArrowUp />
     </button>

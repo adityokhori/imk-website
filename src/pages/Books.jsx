@@ -6,6 +6,7 @@ import { auth } from "../config/firebase-config";
 import SearchBooks from "../components/SearchBooks";
 import SmoothScroll from 'smooth-scroll';
 import ScrollToTop from '../components/scrollToTop';
+import {motion} from "framer-motion";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -79,13 +80,17 @@ const Books = () => {
   return (
     <div className="container mx-auto px-4 py-8 mt-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {booksToDisplay.map((book) => (
+        {booksToDisplay.map((book, index) => (
           !user || !emailVerified ? (
             <Link to="/login">
-            <div
-              key={book.id}
-              className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md cursor-not-allowed border-2 border-inherit"
-              onClick={warningLogin}
+            <motion.div
+               key={book.id}
+               initial={{ opacity: 0, y: 50 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -50 }}
+               transition={{ duration: 0.5, delay: index * 0.1 }}
+               className={!user || !emailVerified ? "cursor-not-allowed border-2 border-inherit rounded-lg shadow-md p-2 flex flex-col items-center justify-center" : "hover:bg-slate-100 border-2 border-inherit rounded-lg shadow-md p-2 flex flex-col items-center justify-center"}
+               onClick={!user || !emailVerified ? warningLogin : null}
             >
               <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
                 <img
@@ -100,11 +105,19 @@ const Books = () => {
               <p className="text-gray-600 line-clamp-1">
                 {book.authors.map((author) => author.name).join(", ")}
               </p>
-            </div>
+            </motion.div>
             </Link>
           ) : (
             <Link to={`/book/${book.id}`} key={book.id}>
-              <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-md border-2 border-inherit hover:bg-slate-100">
+              <motion.div
+            key={book.id}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className={!user || !emailVerified ? "cursor-not-allowed border-2 border-inherit rounded-lg shadow-md p-2 flex flex-col items-center justify-center" : "hover:bg-slate-100 border-2 border-inherit rounded-lg shadow-md p-2 flex flex-col items-center justify-center"}
+            onClick={!user || !emailVerified ? warningLogin : null}
+          >
                 <div className="w-32 h-50 mb-4 rounded-lg overflow-hidden">
                   <img
                     src={book.formats["image/jpeg"]}
@@ -118,7 +131,7 @@ const Books = () => {
                 <p className="text-gray-600 line-clamp-1">
                   {book.authors.map((author) => author.name).join(", ")}
                 </p>
-              </div>
+              </motion.div>
             </Link>
           )
         ))}
