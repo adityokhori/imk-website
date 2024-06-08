@@ -6,6 +6,8 @@ import Button from "../components/Button/button";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import {motion} from "framer-motion";
+
 
 const MyBooks = () => {
   const { bookId } = useParams();
@@ -126,10 +128,16 @@ const MyBooks = () => {
         {savedBooks.length === 0 ? (
           <p className="text-black text-2xl">No saved books found.</p>
         ) : (
-          savedBooks.map((book) => (
+          savedBooks.map((book, index) => (
             <Link to={`/book/${book.id}`} key={book.id}>
-              <div
-                className="flex flex-col border-2 border-inherit p-4 rounded-lg shadow-lg "
+              <motion.div
+                key={book.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={!user || !emailVerified ? "cursor-not-allowed border-2 border-inherit rounded-lg shadow-lg p-4 flex flex-col items-center justify-center" : "hover:bg-slate-100 border-2 border-inherit rounded-lg shadow-md p-2 flex flex-col items-center justify-center"}
+                onClick={!user || !emailVerified ? warningLogin : null}
               >
                 <div className="flex flex-row">
                   <img
@@ -167,7 +175,7 @@ const MyBooks = () => {
                     Delete
                   </Button>
                 </div>
-              </div>
+              </motion.div>
             </Link>
           ))
         )}

@@ -17,11 +17,12 @@ const Nav = () => {
     { name: "Non-Fiction", link: "/genre/non-fiction" },
     { name: "Science Fiction", link: "/genre/science-fiction" },
     { name: "Fantasy", link: "/genre/fantasy" },
-    { name: "Thriller", link: "/genre/fantasy" },
-    { name: "Romance", link: "/genre/fantasy" },
-    { name: "Mistery", link: "/genre/fantasy" },
+    { name: "Thriller", link: "/genre/thriller" },
+    { name: "Romance", link: "/genre/romance" },
+    { name: "Mistery", link: "/genre/mistery" },
   ];
 
+  
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
