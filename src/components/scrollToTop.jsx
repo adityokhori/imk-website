@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import Fab from '@mui/material/Fab';
+import Zoom from '@mui/material/Zoom';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    position: 'fixed',
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
+    zIndex: 1000,
+  },
+}));
 
 const ScrollToTopButton = () => {
+  const classes = useStyles();
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -25,16 +38,15 @@ const ScrollToTopButton = () => {
   }, []);
 
   return (
-    <button
-      type="button"
-      onClick={scrollToTop}
-      className={`fixed bottom-4 right-4 p-3 rounded-full bg-orange-800 text-white hover:bg-orange-700 transition-opacity ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-      style={{ transition: "opacity 0.5s" }}
-    >
-      <FaArrowUp />
-    </button>
+    <Zoom in={isVisible}>
+      <Fab 
+        color="secondary" 
+        onClick={scrollToTop} 
+        className={classes.root}
+      >
+        <ArrowUpwardIcon />
+      </Fab>
+    </Zoom>
   );
 };
 
